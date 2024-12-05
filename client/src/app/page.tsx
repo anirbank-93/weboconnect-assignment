@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use client"
 
 import Main from "@/pages/Main";
 import Header from "@/components/Header";
