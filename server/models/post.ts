@@ -31,10 +31,10 @@ module.exports = (
     likeCount!: number;
     static associate(models: any) {
       // define association here
-      Post.belongsTo(models.User,{
-        as:'created_by_user',
-        foreignKey: 'user_id'
-      });
+      // Post.belongsTo(models.User,{
+      //   as:'created_by_user',
+      //   foreignKey: 'user_id'
+      // });
     }
   }
   Post.init(
@@ -54,7 +54,7 @@ module.exports = (
         allowNull: false,
       },
       user_id: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING, // .UUID,
         allowNull: false,
       },
       tags: {

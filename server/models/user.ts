@@ -28,11 +28,11 @@ module.exports = (
     profile_pic!: string;
     static associate(models: any) {
       // define association here
-      User.hasMany(models.Post, {
-        // through: "Post",
-        as: "posts",
-        foreignKey: "user_id"
-      });
+      // User.hasMany(models.Post, {
+      //   // through: "Post",
+      //   as: "posts",
+      //   foreignKey: "user_id"
+      // });
     }
   }
   User.init(

@@ -1,6 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
+
+// Utils
+import { toast } from "react-hot-toast";
+
+// Models
+import { ApiFuncArgProps } from "@/models/apiFuncHelpers";
+
+// Typeguards
+import { isApiErrorResponse } from "@/helpers/typeguards";
+
+// Api function
+import { ApiHelperFunction } from "@/helpers/api_helpers";
+
+// Components
 import {
   Box,
   TextField,
@@ -8,14 +22,7 @@ import {
   Typography,
   Paper,
   styled,
-  Input
 } from "@mui/material";
-import { useState, useEffect } from "react";
-
-// Api function
-
-//   // Redux action
-//   import { createPost } from '../../redux/actions/postAction';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -39,35 +46,158 @@ const SubmitButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
+interface PostAttrs {
+  creator: string;
+  title: string;
+  description: string;
+  tags: string;
+  selectedFile: string;
+  likes: number;
+}
+
 const postInitialValues = {
   creator: "",
   title: "",
   description: "",
   tags: "",
-  file: "",
+  selectedFile: "",
   likes: 0,
 };
 
+let createError = {
+  title: "",
+  selectedFile: "",
+};
+
 const Form: React.FC = () => {
-  const [postData, setPostData] = useState(postInitialValues);
+  const [postData, setPostData] = useState<PostAttrs>(postInitialValues);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [files, setfiles] = useState<File | undefined>(undefined);
+  const [errors, seterrors] = useState(createError);
+
+  const handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  > = (event) => {
+    setPostData({ ...postData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmitFileChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    if (!event.target.files) return;
+
+    if (event.target.files.length === 0) return;
+
+    let files = event.target.files[0];
+
+    // let imgArr = [...attachmentFiles];
+
+    // for (let i: number = 0; i < files.length; i++) {
+    //   if (files.size > 500000000) {
+    //     seterrors({
+    //       ...errors,
+    //       selectedFile: "Uploaded file can't be more than 5mb",
+    //     });
+    //   } else {
+    //     if (!attachmentFiles.find((item) => item.name === files[i].name)) {
+    //       imgArr.push(files[i]);
+    //     }
+    //   }
+    // }
+
+    // setattachmentFiles(imgArr);
+    // setsubmitDataErrors({ ...submitAssignmentCreateErrors, attachment: "" });
+    if (files.size > 500000000) {
+      seterrors({
+        ...errors,
+        selectedFile: "Uploaded file can't be more than 5mb",
+      });
+    } else {
+      setfiles(files);
+      seterrors({ ...errors, selectedFile: "" });
+    }
+  };
+
+  /** -------- Validation of input ---------- */
+  const handleValidation = () => {
+    const { title } = postData;
+
+    if (title === "") {
+      seterrors({ ...createError, title: "" });
+      return false;
+    }
+    return true;
+  };
+  /** --------------------------------------- */
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
     event
   ) => {
     event.preventDefault();
-    //   let res = await JSON_API['createPost'](postData);
-    //   console.log('response', res);
+    // if (handleValidation()) {
+    try {
+      const DATA = new FormData();
 
-    //   if (res?.isSuccess) {
-    //     console.log('sucesss');
-    //     // clear();
-    //   }
+      // for (let i: number = 0; i < attachmentFiles.length; i++) {
+      //   DATA.append("files", attachmentFiles[i]);
+      // }
+      if (files) {
+        DATA.append("image", files);
+      }
 
-    //   // dispatch(createPost(postData));
+      const imgUpRes = await ApiHelperFunction({
+        urlPath: "/upload-image",
+        method: "POST",
+        data: DATA,
+        role: "privileged",
+        contentType: "form-data",
+      } as ApiFuncArgProps);
+
+      if (isApiErrorResponse(imgUpRes)) {
+        toast.error(imgUpRes.error.message);
+      } else if (imgUpRes.data) {
+        let bodyData = {
+          ...postData,
+          selectedFile: imgUpRes.data.imageUrl,
+        };
+        
+        let response = await ApiHelperFunction({
+          urlPath: "/posts",
+          method: "POST",
+          data: {
+            data: bodyData,
+          },
+          role: "privileged",
+        } as ApiFuncArgProps);
+
+        if (isApiErrorResponse(response)) {
+          toast.error(response.error.message);
+        } else if (response.data) {
+          setPostData(postInitialValues);
+          setfiles(undefined);
+          if (fileRef.current) {
+            fileRef.current.value = "";
+          }
+          seterrors(errors);
+          toast.success("Submitted successfully.");
+        } else {
+          console.log("Unexpected response:", response);
+        }
+      } else {
+        console.log("Unexpected response:", imgUpRes);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+    // }
   };
 
   const clear = () => {
-    console.log("Cleared");
+    setPostData(postInitialValues);
+    setfiles(undefined);
+    if (fileRef.current) {
+      fileRef.current.value = "";
+    }
   };
 
   return (
@@ -84,9 +214,7 @@ const Form: React.FC = () => {
           label="Creator"
           fullWidth
           value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
+          onChange={handleChange}
         />
         <TextField
           name="title"
@@ -94,7 +222,7 @@ const Form: React.FC = () => {
           label="Title"
           fullWidth
           value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          onChange={handleChange}
         />
         <TextField
           name="description"
@@ -102,9 +230,7 @@ const Form: React.FC = () => {
           label="Message"
           fullWidth
           value={postData.description}
-          onChange={(e) =>
-            setPostData({ ...postData, description: e.target.value })
-          }
+          onChange={handleChange}
         />
         <TextField
           name="tags"
@@ -112,11 +238,17 @@ const Form: React.FC = () => {
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+          onChange={handleChange}
         />
         <FileInputWrapper>
-          <Input
+          <input
             type="file"
+            name="file-input"
+            id="file-input"
+            className="file-input__input"
+            ref={fileRef}
+            multiple
+            onChange={handleSubmitFileChange}
           />
         </FileInputWrapper>
         <SubmitButton

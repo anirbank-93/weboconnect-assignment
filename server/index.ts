@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import dotenv from "dotenv";
 import indexRoute from "./app/routes";
 import userSeeds from "./seeders/user.seeds";
@@ -15,7 +16,8 @@ let corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "30mb" }));
-app.use(express.urlencoded({ limit: "30mb", extended: true }));
+app.use(express.urlencoded({ limit: "30mb", extended: false }));
+app.use("/storages", express.static(path.join(__dirname,"app/storages")));
 
 import db from "./models";
 
@@ -25,7 +27,7 @@ const createUsers = () => {
     });
 }
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ force: true }).then(() => {
     // createUsers();
     console.log("DB Connected");
 }).catch((err:any) => {
