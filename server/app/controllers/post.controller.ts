@@ -12,8 +12,8 @@ export async function getPosts(req: Request, res: Response) {
         message: "Posts get successfully.",
         data: result
       });
-  } catch (error) {
-    //
+  } catch (error:any) {
+    res.status(500).json({ status: false, message: error.message })
   }
 }
 
