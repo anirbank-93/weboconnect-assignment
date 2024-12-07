@@ -6,7 +6,7 @@ import {
   ApiErrorResponse,
 } from "@/models/apiFuncHelpers";
 
-let API_URL: string | undefined = process.env.REACT_APP_API_BASE_URL;
+let API_URL: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
 
 async function ApiHelperFunction(
   props: ApiFuncArgProps

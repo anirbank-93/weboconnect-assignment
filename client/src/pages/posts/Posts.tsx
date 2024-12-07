@@ -1,30 +1,15 @@
 "use client";
 
-import React from "react"
-import { useEffect } from "react";
-// import axios from 'axios';
-import { useDispatch, useSelector } from "react-redux";
-import { CircularProgress, styled } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 // Redux actions
-// import { getPosts } from '@/redux/actions/postAction';
+import { getAllPosts } from "@/redux/slices/postSlice";
 
 // Components
+import { CircularProgress, styled } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import Post from "./[id]/Post";
-
-type PostType = {
-  file: string;
-  creator?: string;
-  createdAt: string | Date;
-  tags: string[];
-  title: string;
-  likes: number;
-};
-
-type PostProps = {
-  post?: PostType;
-};
 
 const Container = styled(Grid)`
   display: flex;
@@ -32,31 +17,33 @@ const Container = styled(Grid)`
 `;
 
 const Posts: React.FC = () => {
-  // const { posts } = useSelector((state) => state.getPosts);
-  //console.log(posts, 'posts');
+  const dispatch = useAppDispatch();
 
-  // const dispatch = useDispatch();
+  // Redux stores
+  const { posts } = useAppSelector((state) => state.posts);
+  console.log(posts, 'posts');
 
-  //   useEffect(() => {
-  //     dispatch(getPosts());
-  //   }, [dispatch]);
+    useEffect(() => {
+      dispatch(getAllPosts());
+    }, []);
 
-  return (
-    <Container container spacing={3}>
-      <Post />
-    </Container>
-  );
-  // return posts.length > 0 ? (
+  // return (
   //   <Container container spacing={3}>
-  //     {posts.map((item, index) => (
-  //       <Grid item key={index} xs={12} sm={6}>
-  //         <Post post={item} />
-  //       </Grid>
-  //     ))}
+  //     <Post />
   //   </Container>
-  // ) : (
-  //   <CircularProgress />
   // );
+  return posts?.data?.length > 0 ? (
+    <Container container spacing={3}>
+      {posts?.data?.map((item, index) => (
+        <Grid item key={index} xs={12} sm={6}>
+          <Post post={item} />
+        </Grid>
+      ))}
+    </Container>
+  ) : (
+    // <CircularProgress />
+    <div style={{fontSize:80}}>No posts...</div>
+  );
 };
 
 export default Posts;
