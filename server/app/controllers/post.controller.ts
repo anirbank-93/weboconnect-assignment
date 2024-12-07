@@ -6,3 +6,10 @@ export async function getPosts(req:Request,res:Response) {
         message: "Posts get successfully.",
     })
 }
+
+export async function createPost (req:Request, res:Response) {
+    res.status(201).json({
+        status: true,
+        message: "Post created successfully.",
+    })
+}

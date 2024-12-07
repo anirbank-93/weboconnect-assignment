@@ -7,9 +7,10 @@ import express,
 const router = express.Router();
 
 // Controllers
-import { getPosts } from "../controllers/post.controller";
+import { getPosts, createPost } from "../controllers/post.controller";
 
 router.get("/", getPosts);
+router.post("/", createPost);
 
 
 export default router;

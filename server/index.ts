@@ -18,7 +18,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 import db from "./models";
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ force: true }).then(() => {
     console.log("DB Connected");
 }).catch((err:any) => {
     console.log("Failed to connect to db due to"+err.message);
