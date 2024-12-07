@@ -7,7 +7,7 @@ export interface PostAttributes {
   message: string;
   user_id: string;
   tags?: string;
-  selectedFile?: string;
+  pictures?: string;
   likeCount?: number;
 }
 
@@ -27,7 +27,7 @@ module.exports = (
     message!: string;
     user_id!: string;
     tags!: string;
-    selectedFile!: string;
+    pictures!: string;
     likeCount!: number;
     static associate(models: any) {
       // define association here
@@ -60,7 +60,7 @@ module.exports = (
       tags: {
         type: DataTypes.STRING,
       },
-      selectedFile: {
+      pictures: {
         type: DataTypes.STRING,
       },
       likeCount: {

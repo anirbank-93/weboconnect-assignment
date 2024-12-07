@@ -5,6 +5,9 @@ import React from 'react';
 // Model
 import { PostDataModel } from "@/models/constants/dataModel";
 
+// Utils
+import moment from 'moment';
+
 // Components
 import {
   Card,
@@ -16,7 +19,8 @@ import {
   styled,
 } from '@mui/material';
 import { ThumbUpAlt, Delete, MoreHoriz } from '@mui/icons-material';
-import moment from 'moment';
+
+let imgBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 type PostProps = {
   post?: PostDataModel;
@@ -71,7 +75,7 @@ const PostActions = styled(CardActions)`
 const Post = ({ post }: PostProps) => {
   return (
     <Component>
-      <StyledCardMedia image={post?.file} />
+      <StyledCardMedia image={imgBaseUrl ? imgBaseUrl+post?.pictures : ""} />
       <Creator>
         <Typography variant="h6">
           {post?.creator || 'Anonymous'}

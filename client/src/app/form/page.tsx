@@ -51,7 +51,7 @@ interface PostAttrs {
   title: string;
   description: string;
   tags: string;
-  selectedFile: string;
+  pictures: string;
   likes: number;
 }
 
@@ -60,13 +60,13 @@ const postInitialValues = {
   title: "",
   description: "",
   tags: "",
-  selectedFile: "",
+  pictures: "",
   likes: 0,
 };
 
 let createError = {
   title: "",
-  selectedFile: "",
+  pictures: "",
 };
 
 const Form: React.FC = () => {
@@ -110,11 +110,11 @@ const Form: React.FC = () => {
     if (files.size > 500000000) {
       seterrors({
         ...errors,
-        selectedFile: "Uploaded file can't be more than 5mb",
+        pictures: "Uploaded file can't be more than 5mb",
       });
     } else {
       setfiles(files);
-      seterrors({ ...errors, selectedFile: "" });
+      seterrors({ ...errors, pictures: "" });
     }
   };
 
@@ -158,7 +158,7 @@ const Form: React.FC = () => {
       } else if (imgUpRes.data) {
         let bodyData = {
           ...postData,
-          selectedFile: imgUpRes.data.imageUrl,
+          pictures: imgUpRes.data.imageUrl,
         };
         
         let response = await ApiHelperFunction({

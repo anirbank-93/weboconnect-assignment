@@ -1,6 +1,6 @@
 export interface PostDataModel {
     id: number;
-    file: string;
+    pictures: string;
     creator?: string;
     createdAt: string | Date;
     updatedAt: string | Date;
