@@ -1,6 +1,11 @@
 "use client";
 
 import React from 'react';
+
+// Model
+import { PostDataModel } from "@/models/constants/dataModel";
+
+// Components
 import {
   Card,
   CardActions,
@@ -13,17 +18,8 @@ import {
 import { ThumbUpAlt, Delete, MoreHoriz } from '@mui/icons-material';
 import moment from 'moment';
 
-type PostType = {
-  file: string;
-  creator?: string;
-  createdAt: string | Date;
-  tags: string[];
-  title: string;
-  likes: number;
-};
-
 type PostProps = {
-  post?: PostType;
+  post?: PostDataModel;
 };
 
 const Component = styled(Card)`

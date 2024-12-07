@@ -18,8 +18,8 @@ import memories from "@/assets/images/memories.png"
 import { StyledAppBar, Heading, StyledImage } from "@/components/AppStyles";
 
 // Pages
-import Posts from "@/pages/posts/Posts";
-import Form from "@/pages/form/Form";
+import Posts from "@/app/posts/page";
+import Form from "@/app/form/page";
 
 const Main: React.FC = () => {
   return (

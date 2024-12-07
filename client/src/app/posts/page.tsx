@@ -9,23 +9,23 @@ import { getAllPosts } from "@/redux/slices/postSlice";
 // Components
 import { CircularProgress, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Post from "./[id]/Post";
+import Post from "../../components/Post";
 
 const Container = styled(Grid)`
   display: flex;
   align-items: stretch;
 `;
 
-const Posts: React.FC = () => {
+const page: React.FC = () => {
   const dispatch = useAppDispatch();
 
   // Redux stores
   const { posts } = useAppSelector((state) => state.posts);
-  console.log(posts, 'posts');
+  console.log(posts, "posts");
 
-    useEffect(() => {
-      dispatch(getAllPosts());
-    }, []);
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
 
   // return (
   //   <Container container spacing={3}>
@@ -42,8 +42,8 @@ const Posts: React.FC = () => {
     </Container>
   ) : (
     // <CircularProgress />
-    <div style={{fontSize:80}}>No posts...</div>
+    <div style={{ fontSize: 80 }}>No posts...</div>
   );
 };
 
-export default Posts;
+export default page;
