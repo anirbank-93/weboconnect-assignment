@@ -49,19 +49,17 @@ const SubmitButton = styled(Button)`
 interface PostAttrs {
   creator: string;
   title: string;
-  description: string;
+  message: string;
   tags: string;
   pictures: string;
-  likes: number;
 }
 
 const postInitialValues = {
   creator: "",
   title: "",
-  description: "",
+  message: "",
   tags: "",
   pictures: "",
-  likes: 0,
 };
 
 let createError = {
@@ -164,9 +162,7 @@ const Form: React.FC = () => {
         let response = await ApiHelperFunction({
           urlPath: "/posts",
           method: "POST",
-          data: {
-            data: bodyData,
-          },
+          data: bodyData,
           role: "privileged",
         } as ApiFuncArgProps);
 
@@ -225,11 +221,11 @@ const Form: React.FC = () => {
           onChange={handleChange}
         />
         <TextField
-          name="description"
+          name="message"
           variant="outlined"
           label="Message"
           fullWidth
-          value={postData.description}
+          value={postData.message}
           onChange={handleChange}
         />
         <TextField

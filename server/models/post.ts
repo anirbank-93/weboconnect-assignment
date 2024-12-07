@@ -9,11 +9,13 @@ export interface PostAttributes {
   tags?: string;
   pictures?: string;
   likeCount?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 module.exports = (
   sequelize: any,
-  DataTypes: { STRING: any; INTEGER: any; UUID: any }
+  DataTypes: { STRING: any; INTEGER: any; UUID: any, DATE: any }
 ) => {
   class Post extends Model<PostAttributes> implements PostAttributes {
     /**
@@ -29,6 +31,8 @@ module.exports = (
     tags!: string;
     pictures!: string;
     likeCount!: number;
+    createdAt!: Date;
+    updatedAt!: Date;
     static associate(models: any) {
       // define association here
       // Post.belongsTo(models.User,{
@@ -66,6 +70,14 @@ module.exports = (
       likeCount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: new Date()
       },
     },
     {
