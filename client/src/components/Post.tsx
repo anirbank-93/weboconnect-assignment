@@ -93,7 +93,7 @@ const Post = ({ post }: PostProps) => {
 
       <PostDetails>
         <Typography variant="body2" color="textSecondary">
-          {post?.tags.map((item, idx) => `#${item} `)}
+          {post?.tags.split(",").map((item) => `#${item} `)}
         </Typography>
         <CardContent>
           <PostTitle variant="h5" gutterBottom>

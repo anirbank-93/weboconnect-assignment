@@ -4,7 +4,7 @@ export interface PostDataModel {
     creator?: string;
     createdAt: string | Date;
     updatedAt: string | Date;
-    tags: string[];
+    tags: string;
     title: string;
     likes: number;
 }
