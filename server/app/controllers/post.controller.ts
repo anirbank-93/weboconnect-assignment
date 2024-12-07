@@ -85,8 +85,7 @@ export async function updatePost(req: Request, res: Response) {
     }
 
     // Execute the update query
-    // const [result]: any
-    const result = await db.sequelize.query(query, {
+    await db.sequelize.query(query, {
       replacements: {
         id: postId,
         user_id: req.body.creator,
@@ -98,19 +97,6 @@ export async function updatePost(req: Request, res: Response) {
       type: db.sequelize.QueryTypes.UPDATE,
     });
 
-    console.log(result);
-    
-
-    // // Check if any rows were updated
-    // if (result.affectedRows === 0) {
-    //   return res.status(404).json({
-    //     status: false,
-    //     message: "Post not found or no changes made.",
-    //   });
-    // }
-
-    // Retrieve the updated post
-    // const [updatedPost]: any
     const updatedPost = await db.sequelize.query(
       `SELECT * FROM social_one.posts WHERE id = :id;`,
       { replacements: { id: postId }, type: db.sequelize.QueryTypes.SELECT }
