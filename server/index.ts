@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import indexRoute from "./app/routes";
+import userSeeds from "./seeders/user.seeds";
 
 dotenv.config();
 
@@ -18,7 +19,14 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 import db from "./models";
 
-db.sequelize.sync({ force: true }).then(() => {
+const createUsers = () => {
+    userSeeds.map(user => {
+        db.User.create(user);
+    });
+}
+
+db.sequelize.sync().then(() => {
+    // createUsers();
     console.log("DB Connected");
 }).catch((err:any) => {
     console.log("Failed to connect to db due to"+err.message);

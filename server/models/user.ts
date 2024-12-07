@@ -4,9 +4,10 @@ import { Model, UUIDV4 } from "sequelize";
 export interface UserAttributes {
   id: string;
   firstName: string;
-  lastName: string;
+  lastName?: string;
   email: string;
   password: string;
+  profile_pic?: string;
 }
 
 module.exports = (
@@ -24,9 +25,11 @@ module.exports = (
     lastName!: string;
     email!: string;
     password!: string;
+    profile_pic!: string;
     static associate(models: any) {
       // define association here
       User.hasMany(models.Post, {
+        // through: "Post",
         as: "posts",
         foreignKey: "user_id"
       });
@@ -57,6 +60,9 @@ module.exports = (
         type: DataTypes.STRING,
         allowNull: false
       },
+      profile_pic: {
+        type: DataTypes.STRING,
+      }
     },
     {
       sequelize,

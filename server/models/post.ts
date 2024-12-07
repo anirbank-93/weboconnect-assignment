@@ -6,11 +6,9 @@ export interface PostAttributes {
   title: string;
   message: string;
   user_id: string;
-  tags: string;
-  selectedFile: string;
-  likeCount: number;
-  // created_at: Date;
-  // updated_at: Date;
+  tags?: string;
+  selectedFile?: string;
+  likeCount?: number;
 }
 
 module.exports = (
@@ -31,8 +29,6 @@ module.exports = (
     tags!: string;
     selectedFile!: string;
     likeCount!: number;
-    // created_at!: Date;
-    // updated_at!: Date;
     static associate(models: any) {
       // define association here
       Post.belongsTo(models.User,{
