@@ -7,21 +7,28 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getAllPosts } from "@/redux/slices/postSlice";
 
 // Components
-import { CircularProgress, styled } from "@mui/material";
+import {
+  // CircularProgress,
+  styled,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Post from "../../components/Post";
+import PostThumbnail from "../../components/PostThumbnail";
 
 const Container = styled(Grid)`
   display: flex;
   align-items: stretch;
 `;
 
-const page: React.FC = () => {
+type PostsProps = {
+  setcurrentId: React.Dispatch<React.SetStateAction<number | undefined>>;
+};
+
+const page: React.FC<PostsProps> = ({ setcurrentId }) => {
   const dispatch = useAppDispatch();
 
   // Redux stores
   const { posts } = useAppSelector((state) => state.posts);
-  console.log(posts, "posts");
+  console.log(posts);
 
   useEffect(() => {
     dispatch(getAllPosts());
@@ -36,7 +43,7 @@ const page: React.FC = () => {
     <Container container spacing={3}>
       {posts?.data?.map((item, index) => (
         <Grid item key={index} xs={12} sm={6}>
-          <Post post={item} />
+          <PostThumbnail post={item} setcurrentId={setcurrentId} />
         </Grid>
       ))}
     </Container>

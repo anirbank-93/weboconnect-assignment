@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useAppSelector } from "@/redux/hooks";
 
 // Utils
 import { toast } from "react-hot-toast";
@@ -46,12 +47,15 @@ const SubmitButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
+interface FormProps {
+  currentId: number | undefined;
+}
 interface PostAttrs {
-  creator: string;
-  title: string;
-  message: string;
-  tags: string;
-  pictures: string;
+  creator?: string;
+  title?: string;
+  message?: string;
+  tags?: string;
+  pictures?: string;
 }
 
 const postInitialValues = {
@@ -67,11 +71,28 @@ let createError = {
   pictures: "",
 };
 
-const Form: React.FC = () => {
+const Form = ({ currentId }: FormProps) => {
   const [postData, setPostData] = useState<PostAttrs>(postInitialValues);
   const fileRef = useRef<HTMLInputElement>(null);
   const [files, setfiles] = useState<File | undefined>(undefined);
   const [errors, seterrors] = useState(createError);
+
+  // Redux stores
+  const { posts } = useAppSelector((state) => state.posts);
+
+  useEffect(() => {
+    if (currentId && posts.data.length > 0) {
+      let selectedPost = posts.data.find((item) => item.id == currentId);
+      setPostData((prev) => {
+        let updated = JSON.parse(JSON.stringify(prev));
+        updated.creator = selectedPost?.user_id;
+        updated.title = selectedPost?.title;
+        updated.message = selectedPost?.message;
+        updated.tags = selectedPost?.tags;
+        return updated;
+      });
+    }
+  }, [currentId]);
 
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -134,53 +155,67 @@ const Form: React.FC = () => {
     event.preventDefault();
     // if (handleValidation()) {
     try {
-      const DATA = new FormData();
+      let bodyData = {
+        ...postData,
+      };
 
-      // for (let i: number = 0; i < attachmentFiles.length; i++) {
-      //   DATA.append("files", attachmentFiles[i]);
-      // }
       if (files) {
+        const DATA = new FormData();
+
+        // for (let i: number = 0; i < attachmentFiles.length; i++) {
+        //   DATA.append("files", attachmentFiles[i]);
+        // }
         DATA.append("image", files);
+
+        const imgUpRes = await ApiHelperFunction({
+          urlPath: "/upload-image",
+          method: "POST",
+          data: DATA,
+          role: "privileged",
+          contentType: "form-data",
+        } as ApiFuncArgProps);
+
+        if (isApiErrorResponse(imgUpRes)) {
+          toast.error(imgUpRes.error.message);
+        } else if (imgUpRes.data) {
+          bodyData.pictures = imgUpRes.data.imageUrl;
+        } else {
+          console.log("Unexpected image upload response:", imgUpRes);
+        }
       }
 
-      const imgUpRes = await ApiHelperFunction({
-        urlPath: "/upload-image",
-        method: "POST",
-        data: DATA,
-        role: "privileged",
-        contentType: "form-data",
-      } as ApiFuncArgProps);
+      let requestConfig: ApiFuncArgProps;
 
-      if (isApiErrorResponse(imgUpRes)) {
-        toast.error(imgUpRes.error.message);
-      } else if (imgUpRes.data) {
-        let bodyData = {
-          ...postData,
-          pictures: imgUpRes.data.imageUrl,
+      if (currentId) {
+        requestConfig = {
+          urlPath: `/posts/${currentId}`,
+          method: "PUT",
+          data: bodyData,
+          role: "privileged",
         };
-        
-        let response = await ApiHelperFunction({
+      } else {
+        requestConfig = {
           urlPath: "/posts",
           method: "POST",
           data: bodyData,
           role: "privileged",
-        } as ApiFuncArgProps);
+        };
+      }
 
-        if (isApiErrorResponse(response)) {
-          toast.error(response.error.message);
-        } else if (response.data) {
-          setPostData(postInitialValues);
-          setfiles(undefined);
-          if (fileRef.current) {
-            fileRef.current.value = "";
-          }
-          seterrors(errors);
-          toast.success("Submitted successfully.");
-        } else {
-          console.log("Unexpected response:", response);
+      let response = await ApiHelperFunction(requestConfig);
+
+      if (isApiErrorResponse(response)) {
+        toast.error(response.error.message);
+      } else if (response.data) {
+        setPostData(postInitialValues);
+        setfiles(undefined);
+        if (fileRef.current) {
+          fileRef.current.value = "";
         }
+        seterrors(errors);
+        toast.success("Submitted successfully.");
       } else {
-        console.log("Unexpected response:", imgUpRes);
+        console.log("Unexpected response:", response);
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -203,7 +238,9 @@ const Form: React.FC = () => {
         noValidate
         onSubmit={(e) => handleSubmit(e)}
       >
-        <Typography variant="h6">Creating A Memory</Typography>
+        <Typography variant="h6">
+          {currentId !== undefined ? "Updating A Memory" : "Creating A Memory"}
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"

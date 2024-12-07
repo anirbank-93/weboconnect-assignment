@@ -22,10 +22,6 @@ import { ThumbUpAlt, Delete, MoreHoriz } from '@mui/icons-material';
 
 let imgBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-type PostProps = {
-  post?: PostDataModel;
-};
-
 const Component = styled(Card)`
   display: flex;
   flex-direction: column;
@@ -72,13 +68,18 @@ const PostActions = styled(CardActions)`
   justify-content: space-between;
 `;
 
-const Post = ({ post }: PostProps) => {
+type PostProps = {
+  post?: PostDataModel;
+  setcurrentId: React.Dispatch<React.SetStateAction<number|undefined>>;
+};
+
+const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
   return (
     <Component>
       <StyledCardMedia image={imgBaseUrl ? imgBaseUrl+post?.pictures : ""} />
       <Creator>
         <Typography variant="h6">
-          {post?.creator || 'Anonymous'}
+          {post?.user_id || 'Anonymous'}
         </Typography>
         <Typography variant="body2">
           {moment(post?.createdAt).fromNow() || ""}
@@ -86,7 +87,7 @@ const Post = ({ post }: PostProps) => {
       </Creator>
 
       <StyledHorizBtnContainer>
-        <Button style={{ color: 'white' }} size="small" onClick={() => {}}>
+        <Button style={{ color: 'white' }} size="small" onClick={() => setcurrentId(post?.id)} >
           <MoreHoriz />
         </Button>
       </StyledHorizBtnContainer>
@@ -104,7 +105,7 @@ const Post = ({ post }: PostProps) => {
           <Button size="small" color="primary" onClick={() => {}}>
             <ThumbUpAlt fontSize="small" />
             Like&nbsp;
-            {post?.likes}
+            {post?.likeCount}
           </Button>
           <Button size="small" color="primary" onClick={() => {}}>
             <Delete fontSize="small" />
@@ -116,4 +117,4 @@ const Post = ({ post }: PostProps) => {
   );
 };
 
-export default Post;
+export default PostThumbnail;

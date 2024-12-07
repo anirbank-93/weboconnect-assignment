@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   AppBar,
@@ -22,6 +22,8 @@ import Posts from "@/app/posts/page";
 import Form from "@/app/form/page";
 
 const Main: React.FC = () => {
+  const [currentId, setcurrentId] = useState<number | undefined>(undefined);
+
   return (
     <Container maxWidth="lg">
       <StyledAppBar position="static" color="inherit">
@@ -34,10 +36,10 @@ const Main: React.FC = () => {
         <Container>
           <Grid container justifyContent="space-between" alignItems="stretch">
             <Grid item xs={12} sm={7}>
-              <Posts />
+              <Posts setcurrentId={setcurrentId} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Form />
+              <Form currentId={currentId} />
             </Grid>
           </Grid>
         </Container>

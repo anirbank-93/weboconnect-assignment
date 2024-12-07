@@ -3,7 +3,7 @@ import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import indexRoute from "./app/routes";
-import userSeeds from "./seeders/user.seeds";
+// import userSeeds from "./seeders/user.seeds";
 
 dotenv.config();
 
@@ -21,13 +21,13 @@ app.use("/storages", express.static(path.join(__dirname,"app/storages")));
 
 import db from "./models";
 
-const createUsers = () => {
-    userSeeds.map(user => {
-        db.User.create(user);
-    });
-}
+// const createUsers = () => {
+//     userSeeds.map(user => {
+//         db.User.create(user);
+//     });
+// }
 
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync().then(() => {
     // createUsers();
     console.log("DB Connected");
 }).catch((err:any) => {

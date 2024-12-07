@@ -1,12 +1,13 @@
 export interface PostDataModel {
     id: number;
-    pictures: string;
-    creator?: string;
-    createdAt: string | Date;
-    updatedAt: string | Date;
+    pictures?: string;
+    user_id: string;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
     tags: string;
     title: string;
-    likes: number;
+    message: string;
+    likeCount?: number;
 }
 
 export interface PostListDataModel {
