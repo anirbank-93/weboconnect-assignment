@@ -84,7 +84,6 @@ export async function updatePost(req: Request, res: Response) {
       });
     }
 
-    // Execute the update query
     await db.sequelize.query(query, {
       replacements: {
         id: postId,
@@ -108,7 +107,28 @@ export async function updatePost(req: Request, res: Response) {
       data: updatedPost,
     });
   } catch (error: any) {
-    console.error("Error during SQL query execution:", error.message); // Logs the full error
+    console.error("Error during SQL query execution:", error.message);
+    res.status(500).json({ status: false, message: error.message });
+  }
+}
+
+export async function deletePost (req: Request, res: Response) {
+  let postId = req.params.postID;
+
+  const query = "DELETE FROM social_one.posts WHERE id = :id;"
+  try {
+    await db.sequelize.query(query, {
+      replacements: {
+        id: postId,
+      },
+      type: db.sequelize.QueryTypes.DELETE,
+    });
+
+    res.status(200).json({
+      status: true,
+      message: "Post deleted successfully.",
+    });
+  } catch (error:any) {
     res.status(500).json({ status: false, message: error.message });
   }
 }

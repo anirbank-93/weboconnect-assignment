@@ -1,12 +1,23 @@
 "use client";
 
 import React from 'react';
+import { useAppDispatch } from "@/redux/hooks";
 
-// Model
+// Models
 import { PostDataModel } from "@/models/constants/dataModel";
 
 // Utils
 import moment from 'moment';
+import { toast } from "react-hot-toast";
+
+// Typeguards
+import { isApiErrorResponse } from "@/helpers/typeguards";
+
+// Api function
+import { ApiHelperFunction } from "@/helpers/api_helpers";
+
+// Redux actions
+import { getAllPosts } from "@/redux/slices/postSlice";
 
 // Components
 import {
@@ -19,6 +30,7 @@ import {
   styled,
 } from '@mui/material';
 import { ThumbUpAlt, Delete, MoreHoriz } from '@mui/icons-material';
+import { ApiFuncArgProps } from '@/models/apiFuncHelpers';
 
 let imgBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -74,6 +86,32 @@ type PostProps = {
 };
 
 const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
+  const dispatch = useAppDispatch();
+
+  const deletePost = async (id:number|undefined) => {
+    console.log(id);
+    
+    if (id) {
+      console.log("here");
+      
+      let response = await ApiHelperFunction({
+        urlPath: `/posts/${id}`,
+        method: "DELETE",
+        role: "privileged",
+      } as ApiFuncArgProps);
+
+      if (isApiErrorResponse(response)) {
+        toast.error(response.error.message);
+      } else if (response.data) {
+        setcurrentId(undefined);
+        dispatch(getAllPosts());
+        toast.success("Deleted successfully.");
+      } else {
+        console.log("Unexpected response:", response);
+      }
+    }
+  }
+
   return (
     <Component>
       <StyledCardMedia image={imgBaseUrl ? imgBaseUrl+post?.pictures : ""} />
@@ -107,7 +145,7 @@ const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
             Like&nbsp;
             {post?.likeCount}
           </Button>
-          <Button size="small" color="primary" onClick={() => {}}>
+          <Button size="small" color="primary" onClick={() => deletePost(post?.id)}>
             <Delete fontSize="small" />
             Delete
           </Button>

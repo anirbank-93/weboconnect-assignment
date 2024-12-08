@@ -7,11 +7,12 @@ import express,
 const router = express.Router();
 
 // Controllers
-import { getPosts, createPost, updatePost } from "../controllers/post.controller";
+import { getPosts, createPost, updatePost, deletePost } from "../controllers/post.controller";
 
 router.get("/", getPosts);
 router.post("/", createPost);
 router.put("/:postID", updatePost);
+router.delete("/:postID", deletePost);
 
 
 export default router;

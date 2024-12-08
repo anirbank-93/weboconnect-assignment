@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 
 // Utils
 import { toast } from "react-hot-toast";
@@ -14,6 +14,9 @@ import { isApiErrorResponse } from "@/helpers/typeguards";
 
 // Api function
 import { ApiHelperFunction } from "@/helpers/api_helpers";
+
+// Redux actions
+import { getAllPosts } from "@/redux/slices/postSlice";
 
 // Components
 import {
@@ -72,6 +75,7 @@ let createError = {
 };
 
 const Form = ({ currentId }: FormProps) => {
+  const dispatch = useAppDispatch();
   const [postData, setPostData] = useState<PostAttrs>(postInitialValues);
   const fileRef = useRef<HTMLInputElement>(null);
   const [files, setfiles] = useState<File | undefined>(undefined);
@@ -213,6 +217,7 @@ const Form = ({ currentId }: FormProps) => {
           fileRef.current.value = "";
         }
         seterrors(errors);
+        dispatch(getAllPosts());
         toast.success("Submitted successfully.");
       } else {
         console.log("Unexpected response:", response);
