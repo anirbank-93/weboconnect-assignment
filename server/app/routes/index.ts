@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 import multer from "multer";
 import { uploadImage } from "../utils/fileUpload.utils"
 
-import postRoute from "./post";
+import postRoute from "./post.route";
+import userRoute from "./user.route";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -57,5 +58,6 @@ router.post(
   );
 
 router.use("/api/posts", postRoute);
+router.use("/api/user", )
 
 export default router;
