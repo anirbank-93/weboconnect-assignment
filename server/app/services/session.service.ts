@@ -30,7 +30,7 @@ export async function createSession(
   });
 
   const getSavedSession = await db.sequelize.query(
-    `SELECT * FROM social_one.sessions WHERE user_id=:user_id AND ip=:ip ORDER BY createdAt ASC limit 1;`,
+    `SELECT * FROM social_one.sessions WHERE user_id=:user_id AND ip=:ip ORDER BY id ASC LIMIT 1;`,
     {
       replacements: { user_id: userId, ip },
       type: db.sequelize.QueryTypes.SELECT,
