@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import db from "../../models";
 
-// Utils
-import { omit } from "lodash";
-
 // Services
-// import { findUser } from "../services/user.service";
+import { findUser } from "../services/user.service";
 
 export async function createUserHandler(req: Request, res: Response) {
   const query = `
@@ -22,8 +19,8 @@ export async function createUserHandler(req: Request, res: Response) {
       lastName: req.body.lastName,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10),
-      profile_pic: req.body.profile_pic
-    }
+      profile_pic: req.body.profile_pic,
+    };
 
     await db.sequelize.query(query, {
       replacements: obj,
@@ -44,18 +41,18 @@ export async function createUserHandler(req: Request, res: Response) {
 }
 
 export async function getUserHandler(req: Request, res: Response) {
+  let identifier = "id";
   let userId = req.params.id;
+  let query = `SELECT * FROM social_one.users WHERE ${identifier} = :${identifier};`;
+  let obj = { id: userId };
 
   try {
-    const user = await db.sequelize.query(
-      `SELECT * FROM social_one.users WHERE id = :id;`,
-      { replacements: { id: userId }, type: db.sequelize.QueryTypes.SELECT }
-    );
+    const user = await findUser(query, obj);
 
     return res.status(200).json({
       status: true,
       message: "User data fetch successful.",
-      data: omit(user["0"], "password"),
+      data: user,
     });
   } catch (error: any) {
     return res.status(500).json({

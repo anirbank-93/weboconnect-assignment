@@ -18,7 +18,10 @@ import {
   createUserHandler,
   getUserHandler,
 } from "../controllers/user.controller";
-// import { createUserSessionHandler, invalidateUserSessionHandler } from "../controllers/auth.controller";
+import {
+  createUserSessionHandler,
+  // invalidateUserSessionHandler
+} from "../controllers/auth.controller";
 
 const router = express.Router();
 
@@ -31,12 +34,12 @@ const router = express.Router();
 // Register user
 router.post("/", validateRequest(createUserSchema), createUserHandler);
 
-// // Login user
-// router.post(
-//   "/sessions",
-//   validateRequest(createUserSessionSchema),
-//   createUserSessionHandler
-// );
+// Login user
+router.post(
+  "/sessions",
+  validateRequest(createUserSessionSchema),
+  createUserSessionHandler
+);
 
 // Get user
 // requiresUser,

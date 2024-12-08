@@ -1,57 +1,67 @@
-// import { Request, Response } from "express";
+import { Request, Response } from "express";
 
-// // Services
-// import { validatePassword } from "../services/user.service";
-// import { createSession, createAccessToken, updateSession } from "../services/session.service";
+// Services
+import { validatePassword } from "../services/user.service";
+import {
+  createSession,
+  createAccessToken,
+  // updateSession
+} from "../services/session.service";
 
-// // Utils
-// import { sign } from "../utils/jwt.utils";
+// Utils
+import { sign } from "../utils/jwt.utils";
 
-// // Helpers
+// Helpers
 // import config from "config";
-// import { get } from "lodash";
+import { get } from "lodash";
 
-// export async function createUserSessionHandler(req: Request, res: Response) {
-//   // validate the email and password
-//   const user = await validatePassword(req.body);
+export async function createUserSessionHandler(req: Request, res: Response) {
+  // validate the email and password
+  const user = await validatePassword(req.body);
 
-//   if (!user) {
-//     return res
-//       .status(401)
-//       .json({ status: false, message: "Invalid email or password" });
-//   }
+  if (!user) {
+    return res
+      .status(401)
+      .json({ status: false, message: "Invalid email or password" });
+  }
 
-//   try {
-//     // create a session
-//     const session = await createSession(
-//       user._id,
-//       req.get("user-agent") || "",
-//       req.socket.remoteAddress || req.ip
-//     );
+  let userId = user.id;
 
-//     // create access token
-//     const accessToken = createAccessToken({ user, session });
+  try {
+    // create a session
+    const session = await createSession(
+      userId,
+      req.get("user-agent") || "",
+      req.socket.remoteAddress || req.ip
+    );
 
-//     // create refresh token
-//     const refreshToken = sign(session, {
-//       expiresIn: config.get("refreshTokenTtl"), // 1 minute
-//     });
+    console.log("session", session);
+    
+    // create access token
+    const accessToken = await createAccessToken({ userId, session });
+    console.log(accessToken);
+    
 
-//     // send access & refresh token back
-//     return res.status(200).json({
-//       status: true,
-//       message: "Login successfull!",
-//       accessToken,
-//       refreshToken,
-//     });
-//   } catch (error: any) {
-//     return res.status(500).json({
-//       status: false,
-//       message: "Failed to create session.",
-//       error: error.message,
-//     });
-//   }
-// }
+    // // create refresh token
+    // const refreshToken = sign(session, {
+    //   expiresIn: config.get("refreshTokenTtl"), // 1 minute
+    // });
+
+    // send access & refresh token back
+    return res.status(200).json({
+      status: true,
+      message: "Login successfull!",
+      accessToken,
+      // refreshToken,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      status: false,
+      message: "Failed to create session.",
+      error: error.message,
+    });
+  }
+}
 
 // export async function invalidateUserSessionHandler(req:Request, res:Response) {
 //   const sessionId = get(req, "user.session");

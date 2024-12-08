@@ -1,44 +1,47 @@
-// import { omit } from "lodash";
-// import { FilterQuery } from "mongoose";
+import bcrypt from "bcrypt";
+import { omit } from "lodash";
 
-// import userModel, { UserDocument } from "../models/user.model";
+import db from "../../models";
+import { UserAttributes } from "../../models/user";
 
-// export async function createUser(input: UserDocument) {
-//   try {
-//     return await userModel.create(input);
-//   } catch (error: any) {
-//     throw new Error(error);
-//   }
-// }
+export async function findUser(query: string, replaceObj: object) {
+  const user = await db.sequelize.query(query, {
+    replacements: replaceObj,
+    type: db.sequelize.QueryTypes.SELECT,
+  });
 
-// export async function findUser(query:FilterQuery<UserDocument>) {
-//   const user = await userModel.findOne(query).lean();
+  if (!user) {
+    return false;
+  }
 
-//   if (!user) {
-//     return false;
-//   }
+  return omit(user["0"], "password");
+}
 
-//   return omit(user, "password");
-// }
+export async function validatePassword({
+  email,
+  password,
+}: {
+  email: UserAttributes["email"];
+  password: string;
+}) {
+  // const user = await userModel.findOne({ email });
+  const user = await db.sequelize.query(
+    `SELECT * FROM social_one.users WHERE email = :email;`,
+    { replacements: { email }, type: db.sequelize.QueryTypes.SELECT }
+  );
 
-// export async function validatePassword({
-//   email,
-//   password,
-// }: {
-//   email: UserDocument["email"];
-//   password: string;
-// }) {
-//   const user = await userModel.findOne({ email });
+  if (!user) {
+    return false;
+  }
 
-//   if (!user) {
-//     return false;
-//   }
+  // const isValid = await user.comparePassword(password);
+  const isValid = bcrypt
+    .compare(password, user["0"].password)
+    .catch((e) => false);
 
-//   const isValid = await user.comparePassword(password);
+  if (!isValid) {
+    return false;
+  }
 
-//   if (!isValid) {
-//     return false;
-//   }
-
-//   return omit(user.toJSON(), "password");
-// }
+  return omit(user["0"], "password");
+}
