@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import dotenv from "dotenv";
 
 // Services
 import { validatePassword } from "../services/user.service";
@@ -14,6 +15,8 @@ import { sign } from "../utils/jwt.utils";
 // Helpers
 // import config from "config";
 import { get } from "lodash";
+
+dotenv.config()
 
 export async function createUserSessionHandler(req: Request, res: Response) {
   // validate the email and password
@@ -42,17 +45,17 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     console.log(accessToken);
     
 
-    // // create refresh token
-    // const refreshToken = sign(session, {
-    //   expiresIn: config.get("refreshTokenTtl"), // 1 minute
-    // });
+    // create refresh token
+    const refreshToken = sign(session, {
+      expiresIn: process.env.refreshTokenTtl, // 1 minute
+    });
 
     // send access & refresh token back
     return res.status(200).json({
       status: true,
       message: "Login successfull!",
       accessToken,
-      // refreshToken,
+      refreshToken,
     });
   } catch (error: any) {
     return res.status(500).json({

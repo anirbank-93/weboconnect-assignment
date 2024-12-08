@@ -9,6 +9,8 @@ export default async function requiresUser(
     const user = get(req, "user");
 
     if (!user) {
+      console.log("thisssss");
+      
         return res.sendStatus(403);
     }
 

@@ -3,9 +3,12 @@ import dotenv from "dotenv"
 
 dotenv.config();
 
-const privateKey = process.env.privateKey as string;
+const privateKey = process.env.PRIVATE_KEY as string;
 
 export function sign(object: Object, options?: SignOptions) {
+  console.log(object);
+  console.log(privateKey);
+  
   return jwt.sign(object, privateKey, options);
 }
 
@@ -27,6 +30,8 @@ export function decode(token: string | Array<string>): decodedValues {
       return { valid: true, expired: false, decoded: undefined };
     }
   } catch (error: any) {
+    console.log("in decode", error);
+    
     return {
       valid: false,
       expired: error.message === "jwt expired",

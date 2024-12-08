@@ -5,6 +5,7 @@ import { decode } from "../utils/jwt.utils";
 
 const deserializeUser = async (req:Request, res:Response, next:NextFunction) => {
     const accessToken = get(req, "headers.authorization");
+    console.log("accessToken1", accessToken);
 
     const refreshToken = get(req, "headers.refresh");
     console.log("refresh", refreshToken);
