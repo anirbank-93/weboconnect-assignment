@@ -18,7 +18,7 @@ import {
   createUserHandler,
   getUserHandler,
 } from "../controllers/user.controller";
-import { createUserSessionHandler, invalidateUserSessionHandler } from "../controllers/auth.controller";
+// import { createUserSessionHandler, invalidateUserSessionHandler } from "../controllers/auth.controller";
 
 const router = express.Router();
 
@@ -29,22 +29,23 @@ const router = express.Router();
 // });
 
 // Register user
-router.post("/users", validateRequest(createUserSchema), createUserHandler);
+router.post("/", validateRequest(createUserSchema), createUserHandler);
 
-// Login user
-router.post(
-  "/sessions",
-  validateRequest(createUserSessionSchema),
-  createUserSessionHandler
-);
+// // Login user
+// router.post(
+//   "/sessions",
+//   validateRequest(createUserSessionSchema),
+//   createUserSessionHandler
+// );
 
 // Get user
-router.get("/users/:id", requiresUser, validateRequest(getUserSchema), getUserHandler);
+// requiresUser,
+router.get("/:id", validateRequest(getUserSchema), getUserHandler);
 
 // Edit user
 router.put("/users/:id");
 
-// Logout (delete session)
-router.delete("/sessions", requiresUser, invalidateUserSessionHandler);
+// // Logout (delete session)
+// router.delete("/sessions", requiresUser, invalidateUserSessionHandler);
 
 export default router;

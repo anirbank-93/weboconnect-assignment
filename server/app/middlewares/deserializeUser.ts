@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
 import { decode } from "../utils/jwt.utils";
-import { reIssueAccessToken } from "../services/session.service";
+// import { reIssueAccessToken } from "../services/session.service";
 
 const deserializeUser = async (req:Request, res:Response, next:NextFunction) => {
     const accessToken = get(req, "headers.authorization");
@@ -21,21 +21,21 @@ const deserializeUser = async (req:Request, res:Response, next:NextFunction) => 
         return next();
     }
 
-    if (expired && refreshToken) {
-        const newAccessToken = await reIssueAccessToken({ refreshToken });
+    // if (expired && refreshToken) {
+    //     const newAccessToken = await reIssueAccessToken({ refreshToken });
 
-        if (newAccessToken) {
-            // Add the new access token to the response header
-            res.setHeader("x-access-token", newAccessToken);
+    //     if (newAccessToken) {
+    //         // Add the new access token to the response header
+    //         res.setHeader("x-access-token", newAccessToken);
 
-            const { decoded } = decode(newAccessToken);
+    //         const { decoded } = decode(newAccessToken);
             
-            // @ts-ignore
-            req.user = decoded;
-        }
+    //         // @ts-ignore
+    //         req.user = decoded;
+    //     }
 
-        return next();
-    }
+    //     return next();
+    // }
 
     return next();
 }

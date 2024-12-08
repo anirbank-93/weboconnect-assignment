@@ -58,6 +58,6 @@ router.post(
   );
 
 router.use("/api/posts", postRoute);
-router.use("/api/user", )
+router.use("/api/user", userRoute);
 
 export default router;

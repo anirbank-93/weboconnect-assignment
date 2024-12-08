@@ -8,11 +8,13 @@ export interface UserAttributes {
   email: string;
   password: string;
   profile_pic?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 module.exports = (
   sequelize: any,
-  DataTypes: { STRING: any; INTEGER: any; UUID: any }
+  DataTypes: { STRING: any; INTEGER: any; UUID: any, DATE: any }
 ) => {
   class User extends Model<UserAttributes> implements UserAttributes {
     /**
@@ -26,6 +28,8 @@ module.exports = (
     email!: string;
     password!: string;
     profile_pic!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
     static associate(models: any) {
       // define association here
       // User.hasMany(models.Post, {
@@ -41,7 +45,7 @@ module.exports = (
         type: DataTypes.UUID,
         // autoIncrement: true,
         allowNull: false,
-        defaultValue: UUIDV4,
+        // defaultValue: UUIDV4,
         primaryKey: true,
       },
       firstName: {
@@ -62,7 +66,15 @@ module.exports = (
       },
       profile_pic: {
         type: DataTypes.STRING,
-      }
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+      },
     },
     {
       sequelize,

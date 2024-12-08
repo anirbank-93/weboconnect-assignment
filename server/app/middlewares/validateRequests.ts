@@ -1,6 +1,5 @@
 import { AnySchema } from "yup";
 import { Request, Response, NextFunction, query } from "express";
-import log from "../logger";
 
 const validate =
   (schema: AnySchema) =>
@@ -14,7 +13,6 @@ const validate =
 
       return next();
     } catch (error: any) {
-      log.error(error);
       return res
         .status(400)
         .send({
