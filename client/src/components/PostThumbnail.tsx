@@ -89,11 +89,7 @@ const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
   const dispatch = useAppDispatch();
 
   const deletePost = async (id:number|undefined) => {
-    console.log(id);
-    
     if (id) {
-      console.log("here");
-      
       let response = await ApiHelperFunction({
         urlPath: `/posts/${id}`,
         method: "DELETE",
@@ -106,6 +102,30 @@ const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
         setcurrentId(undefined);
         dispatch(getAllPosts());
         toast.success("Deleted successfully.");
+      } else {
+        console.log("Unexpected response:", response);
+      }
+    }
+  }
+
+  const likePost = async (id:number|undefined) => {
+    console.log(id);
+    
+    if (id) {
+      console.log("here");
+      
+      let response = await ApiHelperFunction({
+        urlPath: `/posts/likePost/${id}`,
+        method: "PATCH",
+        role: "privileged",
+      } as ApiFuncArgProps);
+
+      if (isApiErrorResponse(response)) {
+        toast.error(response.error.message);
+      } else if (response.data) {
+        setcurrentId(undefined);
+        dispatch(getAllPosts());
+        // toast.success("Liked successfully.");
       } else {
         console.log("Unexpected response:", response);
       }
@@ -140,7 +160,7 @@ const PostThumbnail: React.FC<PostProps> = ({ post, setcurrentId }) => {
           </PostTitle>
         </CardContent>
         <PostActions>
-          <Button size="small" color="primary" onClick={() => {}}>
+          <Button size="small" color="primary" onClick={() => likePost(post?.id)}>
             <ThumbUpAlt fontSize="small" />
             Like&nbsp;
             {post?.likeCount}

@@ -76,7 +76,6 @@ export async function updatePost(req: Request, res: Response) {
   try {
     const { title, message, creator } = req.body || {};
 
-    // Validate input
     if (!title || !message || !creator) {
       return res.status(400).json({
         status: false,
@@ -112,10 +111,10 @@ export async function updatePost(req: Request, res: Response) {
   }
 }
 
-export async function deletePost (req: Request, res: Response) {
+export async function deletePost(req: Request, res: Response) {
   let postId = req.params.postID;
 
-  const query = "DELETE FROM social_one.posts WHERE id = :id;"
+  const query = "DELETE FROM social_one.posts WHERE id = :id;";
   try {
     await db.sequelize.query(query, {
       replacements: {
@@ -128,7 +127,51 @@ export async function deletePost (req: Request, res: Response) {
       status: true,
       message: "Post deleted successfully.",
     });
-  } catch (error:any) {
+  } catch (error: any) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+}
+
+export async function likePost(req: Request, res: Response) {
+  let postId = req.params.postID;
+
+  const query = `
+    UPDATE social_one.posts
+    SET likeCount = :likeCount
+    WHERE id = :id;
+  `;
+
+  try {
+    const postData = await db.sequelize.query(
+      `SELECT * FROM social_one.posts WHERE id = :id;`,
+      { replacements: { id: postId }, type: db.sequelize.QueryTypes.SELECT }
+    );
+
+    // console.log(postData);
+
+    if (postData) {
+      const likeCount = Number(postData[0].likeCount);
+      const newLikeCount = likeCount + 1;
+
+      await db.sequelize.query(query, {
+        replacements: { id: postId, likeCount: newLikeCount },
+        type: db.sequelize.QueryTypes.UPDATE,
+      });
+
+      const updatedPost = await db.sequelize.query(
+        `SELECT * FROM social_one.posts WHERE id = :id;`,
+        { replacements: { id: postId }, type: db.sequelize.QueryTypes.SELECT }
+      );
+
+      res.status(200).json({
+        status: true,
+        message: "Post liked.",
+        data: updatedPost,
+      });
+    } else {
+      res.status(400).json({ status: false, message: "Post not found." });
+    }
+  } catch (error: any) {
     res.status(500).json({ status: false, message: error.message });
   }
 }
