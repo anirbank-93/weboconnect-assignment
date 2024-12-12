@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 // Assets
 import memories from "@/assets/images/memories.png";
@@ -74,6 +75,8 @@ export const LogoutBtn = styled(Button)`
 `;
 
 const Navbar = () => {
+  const Router = useRouter();
+
   const user = {
     result: {
       name: "",
@@ -97,18 +100,18 @@ const Navbar = () => {
                 {user.result.name.charAt(0)}
               </AvatarStyled>
               <UsernameArea variant="h6">{user.result.name}</UsernameArea>
-              <LogoutBtn
+              <Button
                 variant="contained"
-                color="secondary"
-                onClick={() => {}}
+                color="primary"
+                onClick={() => Router.push("/auth")}
               >
-                Logout
-              </LogoutBtn>
+                Sign In
+              </Button>
             </ProfileDivStyled>
           ) : (
-            <Button variant="contained" color="primary">
-              Sign In
-            </Button>
+            <LogoutBtn variant="contained" color="secondary" onClick={() => {}}>
+              Logout
+            </LogoutBtn>
           )}
         </ToolbarStyled>
       </StyledAppBar>
