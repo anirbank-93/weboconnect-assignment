@@ -6,7 +6,15 @@ import React from "react";
 import memories from "@/assets/images/memories.png";
 
 // Components
-import { styled, AppBar, Typography, Toolbar, Avatar, Button } from "@mui/material";
+import {
+  styled,
+  Container,
+  AppBar,
+  Typography,
+  Toolbar,
+  Avatar,
+  Button,
+} from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 import { deepPurple } from "@mui/material/colors";
@@ -74,27 +82,37 @@ const Navbar = () => {
   };
 
   return (
-    <StyledAppBar position="static" color="inherit">
-      <div className="brandContainer">
-        <Heading variant="h2" align="center">
-          Memories
-        </Heading>
-        <StyledImage src={memories} alt="memories" height="60" />
-      </div>
-      <ToolbarStyled>
-        {user ? (
-          <ProfileDivStyled>
-            <AvatarStyled alt={user.result.name} src={user.result.imageUrl}>
-              {user.result.name.charAt(0)}
-            </AvatarStyled>
-            <UsernameArea variant="h6">{user.result.name}</UsernameArea>
-            <LogoutBtn variant="contained" color="secondary" onClick={() => {}}>Logout</LogoutBtn>
-          </ProfileDivStyled>
-        ) : (
-          <Button variant="contained" color="primary">Sign In</Button>
-        )}
-      </ToolbarStyled>
-    </StyledAppBar>
+    <Container maxWidth="lg">
+      <StyledAppBar position="static" color="inherit">
+        <div className="brandContainer">
+          <Heading variant="h2" align="center">
+            Memories
+          </Heading>
+          <StyledImage src={memories} alt="memories" height="60" />
+        </div>
+        <ToolbarStyled>
+          {user ? (
+            <ProfileDivStyled>
+              <AvatarStyled alt={user.result.name} src={user.result.imageUrl}>
+                {user.result.name.charAt(0)}
+              </AvatarStyled>
+              <UsernameArea variant="h6">{user.result.name}</UsernameArea>
+              <LogoutBtn
+                variant="contained"
+                color="secondary"
+                onClick={() => {}}
+              >
+                Logout
+              </LogoutBtn>
+            </ProfileDivStyled>
+          ) : (
+            <Button variant="contained" color="primary">
+              Sign In
+            </Button>
+          )}
+        </ToolbarStyled>
+      </StyledAppBar>
+    </Container>
   );
 };
 

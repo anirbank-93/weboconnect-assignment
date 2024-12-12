@@ -8,7 +8,6 @@ import {
   Grow,
 } from '@mui/material';
 import Grid from "@mui/material/Grid";
-import Navbar from './Navbar/Navbar';
 
 // Pages
 import Posts from "@/app/posts/page";
@@ -19,7 +18,6 @@ const Main: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Navbar />
       <Grow in>
         <Container>
           <Grid container justifyContent="space-between" alignItems="stretch">
