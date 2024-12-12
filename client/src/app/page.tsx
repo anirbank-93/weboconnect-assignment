@@ -1,7 +1,7 @@
 "use client";
 
 // Components
-import Main from "@/pages/Main";
+import Main from "@/components/Main";
 import { Toaster } from "react-hot-toast";
 
 export default function Home() {

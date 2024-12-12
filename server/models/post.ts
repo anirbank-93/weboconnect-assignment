@@ -35,10 +35,10 @@ module.exports = (
     updatedAt!: Date;
     static associate(models: any) {
       // define association here
-      Post.belongsTo(models.User,{
-        as:'created_by_user',
-        foreignKey: 'user_id'
-      });
+      // Post.belongsTo(models.User,{
+      //   as:'created_by_user',
+      //   foreignKey: 'user_id'
+      // });
     }
   }
   Post.init(

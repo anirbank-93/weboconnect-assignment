@@ -30,10 +30,10 @@ module.exports = (
     updatedAt!: Date;
     static associate(models: any) {
       // define association here
-      Session.belongsTo(models.User, {
-        as: "sessions_of_user",
-        foreignKey: "user_id",
-      });
+      // Session.belongsTo(models.User, {
+      //   as: "sessions_of_user",
+      //   foreignKey: "user_id",
+      // });
     }
   }
   Session.init(

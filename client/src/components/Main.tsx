@@ -1,21 +1,14 @@
 "use client"
 
 import React, { useState } from 'react'
-import {
-  Container,
-  AppBar,
-  Typography,
-  Grow,
-  styled,
-} from '@mui/material';
-import Grid from "@mui/material/Grid";
-
-// Assets
-import memories from "@/assets/images/memories.png"
 
 // Components
-// import Header from "@/components/Header";
-import { StyledAppBar, Heading, StyledImage } from "@/components/AppStyles";
+import {
+  Container,
+  Grow,
+} from '@mui/material';
+import Grid from "@mui/material/Grid";
+import Navbar from './Navbar/Navbar';
 
 // Pages
 import Posts from "@/app/posts/page";
@@ -26,12 +19,7 @@ const Main: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <StyledAppBar position="static" color="inherit">
-        <Heading variant="h2" align="center">
-          Memories
-        </Heading>
-        <StyledImage src={memories} alt="memories" height="60" />
-      </StyledAppBar>
+      <Navbar />
       <Grow in>
         <Container>
           <Grid container justifyContent="space-between" alignItems="stretch">
