@@ -156,6 +156,8 @@ const page = () => {
               <>
                 <TextInput
                   mandatory={true}
+                  autoFocus
+                  halfScreen
                   id="firstName"
                   name="firstName"
                   label="First Name"
@@ -174,6 +176,7 @@ const page = () => {
                   error={signUpErrors.firstName}
                 />
                 <TextInput
+                  halfScreen
                   id="lastName"
                   name="lastName"
                   label="Last Name"

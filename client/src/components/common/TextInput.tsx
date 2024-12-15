@@ -37,7 +37,7 @@ const TextInput = ({
   placeholder,
   onChange,
   error,
-  halfScreen,
+  halfScreen = false,
 }: InputPropTypes) => {
   return (
     <Grid item xs={12} sm={halfScreen ? 6 : 12}>
