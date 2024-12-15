@@ -4,7 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/components/ReduxProvider";
 
 // Components
-import Navbar from "@/components/Navbar/Navbar";
+import Navbar from "@/components/layout/Navbar/Navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

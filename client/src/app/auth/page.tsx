@@ -14,8 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
-
-import "./styles.css";
+import TextInput from "@/components/common/TextInput";
 
 export const PaperStyled = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -51,6 +50,9 @@ let userCreateErrors = {
   passwordConfirmation: "",
 };
 
+var emailReg =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 const page = () => {
   const [signUpValues, setsignUpValues] = useState(signUpInitVal);
   const [profilePicFile, setprofilePicFile] = useState<File | undefined>(
@@ -72,12 +74,54 @@ const page = () => {
   };
 
   const handleValidation = () => {
-    const { firstName } = signUpValues;
+    const { firstName, email, password, passwordConfirmation } = signUpValues;
 
     if (firstName === "") {
       setsignUpErrors({
         ...userCreateErrors,
         firstName: "First name is required",
+      });
+      return false;
+    }
+
+    if (email === "") {
+      setsignUpErrors({
+        ...userCreateErrors,
+        email: "Email is required",
+      });
+      return false;
+    }
+
+    if (!emailReg.test(email)) {
+      setsignUpErrors({ ...userCreateErrors, email: "Invalid email" });
+      return false;
+    }
+
+    if (password === "") {
+      setsignUpErrors({
+        ...userCreateErrors,
+        password: "Password cannot be empty.",
+      });
+      return false;
+    }
+    if (password.length < 8) {
+      setsignUpErrors({
+        ...userCreateErrors,
+        password: "Password cannot be less than 8 characters.",
+      });
+      return false;
+    }
+    if (passwordConfirmation === "") {
+      setsignUpErrors({
+        ...userCreateErrors,
+        passwordConfirmation: "Confirm password cannot be empty.",
+      });
+      return false;
+    }
+    if (passwordConfirmation !== password) {
+      setsignUpErrors({
+        ...userCreateErrors,
+        passwordConfirmation: "Password and confirm password is not same.",
       });
       return false;
     }
@@ -110,10 +154,11 @@ const page = () => {
           <Grid container spacing={2}>
             {!isSignUp && (
               <>
-                <TextField
-                  label="First Name"
-                  name="firstName"
+                <TextInput
+                  mandatory={true}
                   id="firstName"
+                  name="firstName"
+                  label="First Name"
                   placeholder="Enter your first name"
                   value={signUpValues.firstName}
                   onChange={(e) => {
@@ -126,9 +171,75 @@ const page = () => {
                       });
                     }
                   }}
-                ></TextField>
-                <span className="errors">*</span>
-                <span className="errors">{signUpErrors.firstName}</span>
+                  error={signUpErrors.firstName}
+                />
+                <TextInput
+                  id="lastName"
+                  name="lastName"
+                  label="Last Name"
+                  placeholder="Enter your last name"
+                  value={signUpValues.lastName}
+                  onChange={handleChange}
+                />
+                <TextInput
+                  mandatory={true}
+                  id="email"
+                  name="email"
+                  label="Email"
+                  placeholder="Enter your email for example, johndoe@google.com"
+                  value={signUpValues.email}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    if (e.target.value.length > 0) {
+                      setsignUpErrors((prev) => {
+                        prev.email = "";
+                        return prev;
+                      });
+                    }
+                  }}
+                  error={signUpErrors.email}
+                />
+                <TextInput
+                  mandatory={true}
+                  type="password"
+                  id="password"
+                  name="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  value={signUpValues.password}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    if (e.target.value.length > 0) {
+                      setsignUpErrors((prev) => {
+                        prev.password = "";
+                        return prev;
+                      });
+                    }
+                  }}
+                  error={signUpErrors.password}
+                />
+                <TextInput
+                  mandatory={true}
+                  type="password"
+                  id="passwordConfirmation"
+                  name="passwordConfirmation"
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  value={signUpValues.passwordConfirmation}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    if (e.target.value.length > 0) {
+                      setsignUpErrors((prev) => {
+                        prev.passwordConfirmation = "";
+                        return prev;
+                      });
+                    }
+                  }}
+                  error={signUpErrors.passwordConfirmation}
+                />
                 <Button
                   variant="contained"
                   color="primary"
