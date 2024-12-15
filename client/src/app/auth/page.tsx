@@ -34,6 +34,10 @@ export const FormStyled = styled("form")(({ theme }) => ({
   marginTop: theme.spacing(3),
 }));
 
+export const SignUpSubmitButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(3, 0, 2),
+}));
+
 let signUpInitVal = {
   firstName: "",
   lastName: "",
@@ -151,9 +155,9 @@ const page = () => {
         </Typography>
 
         <FormStyled action="">
-          <Grid container spacing={2}>
-            {!isSignUp && (
-              <>
+          {!isSignUp && (
+            <>
+              <Grid container spacing={2}>
                 <TextInput
                   mandatory={true}
                   autoFocus
@@ -243,16 +247,18 @@ const page = () => {
                   }}
                   error={signUpErrors.passwordConfirmation}
                 />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSignUp}
-                >
-                  Submit
-                </Button>
-              </>
-            )}
-          </Grid>
+              </Grid>
+              <SignUpSubmitButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={handleSignUp}
+              >
+                Submit
+              </SignUpSubmitButton>
+            </>
+          )}
         </FormStyled>
       </PaperStyled>
     </Container>
