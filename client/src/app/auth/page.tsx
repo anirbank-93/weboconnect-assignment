@@ -68,6 +68,7 @@ var emailReg =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 const page = () => {
+  const [isSignUp, setisSignUp] = useState(false);
   const [signUpValues, setsignUpValues] = useState(signUpInitVal);
   const [profilePicFile, setprofilePicFile] = useState<File | undefined>(
     undefined
@@ -77,8 +78,6 @@ const page = () => {
   const [signUpErrors, setsignUpErrors] = useState(userCreateErrors);
   const [signInValues, setsignInValues] = useState(signInInitVal);
   const [signInErrors, setsignInErrors] = useState(authErrors);
-
-  const isSignUp = false;
 
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
@@ -365,6 +364,15 @@ const page = () => {
               </SignUpSubmitButton>
             </>
           )}
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Button onClick={() => setisSignUp((prev) => !prev)}>
+                {!isSignUp
+                  ? `Already have an account? Sign in.`
+                  : `Don't have an account? Sign up.`}
+              </Button>
+            </Grid>
+          </Grid>
         </FormStyled>
       </PaperStyled>
     </Container>
