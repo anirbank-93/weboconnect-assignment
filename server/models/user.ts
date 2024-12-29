@@ -37,10 +37,10 @@ module.exports = (
       //   as: "posts",
       //   foreignKey: "user_id"
       // });
-      // User.hasMany(models.Session, {
-      //   as: "sessions",
-      //   foreignKey: "user_id"
-      // });
+      User.hasMany(models.Session, {
+        as: "sessions",
+        foreignKey: "user_id"
+      });
     }
   }
   User.init(
