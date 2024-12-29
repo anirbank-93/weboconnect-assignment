@@ -54,6 +54,16 @@ let userCreateErrors = {
   passwordConfirmation: "",
 };
 
+let signInInitVal = {
+  email: "",
+  password: "",
+};
+
+let authErrors = {
+  email: "",
+  password: "",
+};
+
 var emailReg =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -65,6 +75,8 @@ const page = () => {
   const profilePicRef = useRef<HTMLInputElement>(null);
   const [uploadedProfilePic, setuploadedProfilePic] = useState("");
   const [signUpErrors, setsignUpErrors] = useState(userCreateErrors);
+  const [signInValues, setsignInValues] = useState(signInInitVal);
+  const [signInErrors, setsignInErrors] = useState(authErrors);
 
   const isSignUp = false;
 
@@ -143,6 +155,47 @@ const page = () => {
     }
   };
 
+  const handleAuthValuesChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (event) => {
+    setsignInValues({
+      ...signInValues,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleAuthValueValidation = () => {
+    const { email, password } = signInValues;
+
+    if (email === "") {
+      setsignInErrors({
+        ...authErrors,
+        email: "Email is required",
+      });
+      return false;
+    }
+
+    if (password === "") {
+      setsignInErrors({
+        ...authErrors,
+        password: "Password cannot be empty.",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSignIn: React.MouseEventHandler<
+    HTMLButtonElement | HTMLDivElement
+  > = async (event) => {
+    event.preventDefault();
+
+    if (handleAuthValueValidation()) {
+      console.log(signInValues);
+    }
+  };
+
   return (
     <Container maxWidth="lg">
       <PaperStyled elevation={3}>
@@ -155,7 +208,7 @@ const page = () => {
         </Typography>
 
         <FormStyled action="">
-          {!isSignUp && (
+          {!isSignUp ? (
             <>
               <Grid container spacing={2}>
                 <TextInput
@@ -254,6 +307,59 @@ const page = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleSignUp}
+              >
+                Submit
+              </SignUpSubmitButton>
+            </>
+          ) : (
+            <>
+              <Grid container spacing={2}>
+                <TextInput
+                  mandatory={true}
+                  id="email"
+                  name="email"
+                  label="Email"
+                  placeholder="Enter your email for example, johndoe@google.com"
+                  value={signInValues.email}
+                  onChange={(e) => {
+                    handleAuthValuesChange(e);
+
+                    if (e.target.value.length > 0) {
+                      setsignInErrors((prev) => {
+                        prev.email = "";
+                        return prev;
+                      });
+                    }
+                  }}
+                  error={signInErrors.email}
+                />
+                <TextInput
+                  mandatory={true}
+                  type="password"
+                  id="password"
+                  name="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  value={signInValues.password}
+                  onChange={(e) => {
+                    handleAuthValuesChange(e);
+
+                    if (e.target.value.length > 0) {
+                      setsignInErrors((prev) => {
+                        prev.password = "";
+                        return prev;
+                      });
+                    }
+                  }}
+                  error={signInErrors.password}
+                />
+              </Grid>
+              <SignUpSubmitButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={handleSignIn}
               >
                 Submit
               </SignUpSubmitButton>
