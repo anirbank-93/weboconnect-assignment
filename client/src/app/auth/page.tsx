@@ -2,6 +2,18 @@
 
 import React, { useState, useRef } from "react";
 
+// API
+import { ApiHelperFunction } from "../../helpers/api_helpers";
+
+// Models
+import { ApiFuncArgProps } from "../../models/apiFuncHelpers";
+
+// Utils
+import { toast } from "react-hot-toast";
+
+// Helpers
+import { isApiErrorResponse } from "../../helpers/typeguards";
+
 // Components
 import {
   styled,
@@ -151,6 +163,23 @@ const page = () => {
 
     if (handleValidation()) {
       console.log("signUpValues", signUpValues);
+      try {
+        const res = await ApiHelperFunction({
+          urlPath: "/user",
+          method: "POST",
+          data: signUpValues,
+        } as ApiFuncArgProps);
+
+        if (isApiErrorResponse(res)) {
+          toast.error(res.error.message);
+        } else if (res.data) {
+          //
+        } else {
+          console.log("Unexpected response:", res);
+        }
+      } catch (error:any) {
+        toast.error(error.message);
+      }
     }
   };
 
